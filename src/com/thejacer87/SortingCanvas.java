@@ -11,11 +11,14 @@ public class SortingCanvas extends Canvas implements Runnable {
 
     private int[] bars = new int[15];
     private Thread thread;
+    private Algorithms algorithms;
+    private int sortType;
 
-    public SortingCanvas(int width, int height) {
+    public SortingCanvas(int width, int height, int delay) {
 	setPreferredSize(new Dimension(width, height));
 	setBackground(Color.yellow);
 	createBarArray();
+	algorithms = new Algorithms(delay);
     }
 
     public void reset() {
@@ -39,26 +42,31 @@ public class SortingCanvas extends Canvas implements Runnable {
 	}
     }
 
-    public void sort(int SortType) {
-	switch (SortType) {
-	case 0:
-	    Algorithms.bubbleSort(bars);
-	    break;
-	case 1:
-	    Algorithms.quickSort(bars, 0, bars.length - 1);
-	    break;
-	case 2:
-	    Algorithms.insertionSort(bars);
-	    break;
-	case 3:
-	    Algorithms.selectionSort(bars);
-	    break;
-	}
-	repaint();
+    public void sort(int sortType) {
+	this.sortType = sortType;
+	thread = new Thread(this);
+	thread.start();
     }
 
     @Override
     public void run() {
+	try {
+	    switch (sortType) {
+	    case 0:
+		algorithms.bubbleSort(bars, this);
+		break;
+	    case 1:
+		algorithms.quickSort(bars, 0, bars.length - 1, this);
+		break;
+	    case 2:
+		algorithms.insertionSort(bars, this);
+		break;
+	    case 3:
+		algorithms.selectionSort(bars, this);
+		break;
+	    }
+	} catch (InterruptedException ie) {
+	    ie.printStackTrace();
+	}
     }
-
 }

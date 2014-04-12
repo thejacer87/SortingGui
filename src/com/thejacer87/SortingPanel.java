@@ -20,8 +20,10 @@ public class SortingPanel extends JPanel implements ActionListener {
     private JButton sortButton;
     private JButton resetButton;
     private SortingCanvas sortingCanvas;
+    private int delay;
 
     public SortingPanel() {
+	delay = 250;
 	// Sets layout and background color of main panel.
 	Color background = new Color(0xBBBBBB);
 	setLayout(new BorderLayout());
@@ -37,7 +39,7 @@ public class SortingPanel extends JPanel implements ActionListener {
 	southPanel.add(resetButton);
 
 	JPanel centerPanel = new JPanel();
-	sortingCanvas = new SortingCanvas(500, 300);
+	sortingCanvas = new SortingCanvas(500, 300, delay);
 	centerPanel.setBackground(background);
 	centerPanel.add(sortingCanvas);
 
