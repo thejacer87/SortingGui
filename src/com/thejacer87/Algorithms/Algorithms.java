@@ -12,25 +12,20 @@ public class Algorithms {
     public synchronized void insertionSort(int[] array, SortingCanvas canvas)
 	    throws InterruptedException {
 	int pickup;
+	canvas.draw(-1, -2);
 	for (int i = 1; i < array.length; i++) {
 	    pickup = array[i];
 	    int k = i;
 	    while (k > 0 && pickup < array[k - 1]) {
-		try {
-		    array[k] = array[k - 1];
-		    Thread.sleep(delay);
-		    canvas.repaint();
-		} catch (InterruptedException ie) {
-		}
+		array[k] = array[k - 1];
 		k--;
-	    }
-	    try {
-		array[k] = pickup;
+		canvas.draw(i, k);
 		Thread.sleep(delay);
-		canvas.repaint();
-	    } catch (InterruptedException ie) {
 	    }
+	    array[k] = pickup;
+	    canvas.draw(i, k);
 	}
+	canvas.draw(-1, -2);
     }
 
     public synchronized void selectionSort(int[] array, SortingCanvas canvas)
@@ -61,13 +56,14 @@ public class Algorithms {
 
     public synchronized void bubbleSort(int[] array, SortingCanvas canvas)
 	    throws InterruptedException {
+	canvas.draw(-1, -2);
 	for (int i = 0; i < array.length - 1; i++) {
-	    for (int h = array.length - 2; h >= i; h--) {
+	    for (int k = array.length - 2; k >= i; k--) {
 		try {
-		    if (array[h] > array[h + 1])
-			swap(array, h, h + 1);
+		    if (array[k] > array[k + 1])
+			swap(array, k, k + 1);
 		    Thread.sleep(delay);
-		    canvas.repaint();
+		    canvas.draw(k, k - 1);
 		} catch (InterruptedException ie) {
 		}
 	    }

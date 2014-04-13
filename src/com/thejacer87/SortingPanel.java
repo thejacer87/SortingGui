@@ -23,7 +23,7 @@ public class SortingPanel extends JPanel implements ActionListener {
     private int delay;
 
     public SortingPanel() {
-	delay = 250;
+	delay = 200;
 	// Sets layout and background color of main panel.
 	Color background = new Color(0xBBBBBB);
 	setLayout(new BorderLayout());
