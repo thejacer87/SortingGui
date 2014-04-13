@@ -11,6 +11,7 @@ import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
@@ -31,6 +32,7 @@ public class SortingPanel extends JPanel implements ActionListener {
     protected JButton resetButton;
     private SortingCanvas sortingCanvas;
     private JTextField textfield;
+    private int bars;
 
     public SortingPanel() {
 	// Sets layout and background color of main panel.
@@ -42,7 +44,8 @@ public class SortingPanel extends JPanel implements ActionListener {
 	JPanel southPanel = new JPanel();
 	JLabel barLabel = new JLabel(
 		"Enter the amount of bars to sort and hit enter: ");
-	textfield = new JTextField("15", 5);
+	bars = 15;
+	textfield = new JTextField("" + bars, 5);
 	sortButton = new JButton(" Sort ");
 	resetButton = new JButton("Reset");
 	southPanel.setBorder(BorderFactory.createRaisedBevelBorder());
@@ -112,15 +115,13 @@ public class SortingPanel extends JPanel implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
 	if (e.getSource() == sortButton) {
-	    int bars = Integer.parseInt(textfield.getText());
-	    sortingCanvas.setBars(bars);
+	    setBars();
 	    sortingCanvas.sort(getSortType(), getDelaySpeed());
 	    sortButton.setEnabled(false);
 	    resetButton.setEnabled(false);
 	}
 	if (e.getSource() == textfield) {
-	    int bars = Integer.parseInt(textfield.getText());
-	    sortingCanvas.setBars(bars);
+	    setBars();
 	    sortingCanvas.reset();
 	}
 	if (e.getSource() == resetButton) {
@@ -140,6 +141,24 @@ public class SortingPanel extends JPanel implements ActionListener {
 	myApp.setResizable(false);
 	myApp.setLocationRelativeTo(null);
     } // end Main
+
+    private void setBars() {
+	try {
+	    bars = Integer.parseInt(textfield.getText());
+	} catch (NumberFormatException nfe) {
+	    JOptionPane.showMessageDialog(SortingPanel.this,
+		    "Please enter a number between 1 and 125",
+		    "Number Format Error", JOptionPane.ERROR_MESSAGE);
+	    return;
+	}
+	if (bars < 2 || bars > 125) {
+	    JOptionPane.showMessageDialog(SortingPanel.this,
+		    "Please enter a number between 1 and 125",
+		    "Number Format Error", JOptionPane.ERROR_MESSAGE);
+	    return;
+	}
+	sortingCanvas.setBars(bars);
+    }
 
     private int getDelaySpeed() {
 	if (slowButton.isSelected()) {

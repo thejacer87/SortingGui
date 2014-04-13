@@ -115,11 +115,7 @@ public class SortingCanvas extends Canvas implements Runnable {
     }
 
     public void setBars(int bars) {
-	if (bars < 1 || bars > 125) {
-	    this.bars = 15;
-	} else {
-	    this.bars = bars;
-	}
+	this.bars = bars;
     }
 
     private int getBars() {
