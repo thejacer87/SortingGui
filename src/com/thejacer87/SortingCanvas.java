@@ -14,7 +14,7 @@ public class SortingCanvas extends Canvas implements Runnable {
      */
     private static final long serialVersionUID = 1L;
     private final Color BAR_COLOR = Color.DARK_GRAY;
-    private final int bars = 26;
+    private int bars = 15;
     private SortingPanel sortingPanel;
     private Thread thread;
     private Graphics graphics;
@@ -36,7 +36,7 @@ public class SortingCanvas extends Canvas implements Runnable {
     }
 
     public void createBarArray() {
-	barsArray = new int[bars];
+	barsArray = new int[getBars()];
 	for (int i = 0; i < barsArray.length; i++) {
 	    barsArray[i] = (int) (Math.random() * 20) + 1;
 	}
@@ -111,5 +111,18 @@ public class SortingCanvas extends Canvas implements Runnable {
 	    ie.printStackTrace();
 	}
 	sortingPanel.sortButton.setEnabled(true);
+	sortingPanel.resetButton.setEnabled(true);
+    }
+
+    public void setBars(int bars) {
+	if (bars < 1 || bars > 125) {
+	    this.bars = 15;
+	} else {
+	    this.bars = bars;
+	}
+    }
+
+    private int getBars() {
+	return bars;
     }
 }

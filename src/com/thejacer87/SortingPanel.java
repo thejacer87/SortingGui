@@ -13,6 +13,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
+import javax.swing.JTextField;
 
 public class SortingPanel extends JPanel implements ActionListener {
     /**
@@ -27,8 +28,9 @@ public class SortingPanel extends JPanel implements ActionListener {
     private JRadioButton mediumButton;
     private JRadioButton fastButton;
     protected JButton sortButton;
-    private JButton resetButton;
+    protected JButton resetButton;
     private SortingCanvas sortingCanvas;
+    private JTextField textfield;
 
     public SortingPanel() {
 	// Sets layout and background color of main panel.
@@ -38,16 +40,21 @@ public class SortingPanel extends JPanel implements ActionListener {
 
 	// Creates southPanel components
 	JPanel southPanel = new JPanel();
+	JLabel barLabel = new JLabel(
+		"Enter the amount of bars to sort and hit enter: ");
+	textfield = new JTextField("15", 5);
 	sortButton = new JButton(" Sort ");
 	resetButton = new JButton("Reset");
 	southPanel.setBorder(BorderFactory.createRaisedBevelBorder());
 	southPanel.setBackground(background);
+	southPanel.add(barLabel);
+	southPanel.add(textfield);
 	southPanel.add(sortButton);
 	southPanel.add(resetButton);
 
 	// Creates centerPanel components
 	JPanel centerPanel = new JPanel();
-	sortingCanvas = new SortingCanvas(500, 310, 200, this);
+	sortingCanvas = new SortingCanvas(500, 310, 80, this);
 	centerPanel.setBorder(BorderFactory.createRaisedBevelBorder());
 	centerPanel.setBackground(background);
 	centerPanel.add(sortingCanvas);
@@ -60,8 +67,8 @@ public class SortingPanel extends JPanel implements ActionListener {
 	JLabel speedLabel = new JLabel("SORTING SPEEDS:", JLabel.CENTER);
 	ButtonGroup sortButtonGroup = new ButtonGroup();
 	ButtonGroup speedButtonGroup = new ButtonGroup();
-	bubbleSortButton = new JRadioButton("Bubble Sort", true);
-	quickSortButton = new JRadioButton("Quick Sort");
+	bubbleSortButton = new JRadioButton("Bubble Sort");
+	quickSortButton = new JRadioButton("Quick Sort", true);
 	insertionSortButton = new JRadioButton("Insertion Sort");
 	selectionSortButton = new JRadioButton("Selection Sort");
 	slowButton = new JRadioButton("Slow");
@@ -94,6 +101,7 @@ public class SortingPanel extends JPanel implements ActionListener {
 	westPanel.add(speedPanel);
 
 	// Register listeners and add border layout panels to main panel
+	textfield.addActionListener(this);
 	sortButton.addActionListener(this);
 	resetButton.addActionListener(this);
 	add(westPanel, BorderLayout.WEST);
@@ -104,12 +112,19 @@ public class SortingPanel extends JPanel implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
 	if (e.getSource() == sortButton) {
+	    int bars = Integer.parseInt(textfield.getText());
+	    sortingCanvas.setBars(bars);
 	    sortingCanvas.sort(getSortType(), getDelaySpeed());
 	    sortButton.setEnabled(false);
+	    resetButton.setEnabled(false);
+	}
+	if (e.getSource() == textfield) {
+	    int bars = Integer.parseInt(textfield.getText());
+	    sortingCanvas.setBars(bars);
+	    sortingCanvas.reset();
 	}
 	if (e.getSource() == resetButton) {
 	    sortingCanvas.reset();
-	    sortButton.setEnabled(true);
 	}
     }
 
@@ -134,7 +149,7 @@ public class SortingPanel extends JPanel implements ActionListener {
 	    return 150;
 	}
 	if (fastButton.isSelected()) {
-	    return 80;
+	    return 75;
 	}
 	return -1;
     }

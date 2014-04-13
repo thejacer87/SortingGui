@@ -15,13 +15,13 @@ public class Algorithms {
 	    pickup = array[i];
 	    int k = i;
 	    while (k > 0 && pickup < array[k - 1]) {
-		Thread.sleep(delay);
-		canvas.draw(k, -1, i + 1);
 		array[k] = array[k - 1];
 		k--;
+		Thread.sleep(delay);
+		canvas.draw(-1, k, i);
 	    }
 	    Thread.sleep(delay);
-	    canvas.draw(k, -1, i + 1);
+	    // canvas.draw(k, -1, i + 1);
 	    array[k] = pickup;
 	}
 	canvas.draw(-1, -1, -1);
@@ -92,7 +92,7 @@ public class Algorithms {
 	return right;
     }
 
-    private static void swap(int[] array, int index1, int index2) {
+    private void swap(int[] array, int index1, int index2) {
 	int temp = array[index1];
 	array[index1] = array[index2];
 	array[index2] = temp;
