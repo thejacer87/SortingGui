@@ -31,17 +31,11 @@ public class SortingCanvas extends Canvas implements Runnable {
 
     public void createBarArray() {
 	for (int i = 0; i < barsArray.length; i++) {
-	    barsArray[i] = i + 1;
-	}
-	for (int i = 0; i < barsArray.length; i++) {
-	    int random = (int) (Math.random() * (barsArray.length - 1));
-	    int temp = barsArray[i];
-	    barsArray[i] = barsArray[random];
-	    barsArray[random] = temp;
+	    barsArray[i] = (int) (Math.random() * 20) + 1;
 	}
     }
 
-    public synchronized void draw(int index1, int index2) {
+    public synchronized void draw(int index1, int index2, int index3) {
 	BufferStrategy buffer = getBufferStrategy();
 	if (buffer == null) {
 	    createBufferStrategy(3);
@@ -58,6 +52,9 @@ public class SortingCanvas extends Canvas implements Runnable {
 	    }
 	    if (index2 == i) {
 		graphics.setColor(Color.GREEN);
+	    }
+	    if (index3 == i) {
+		graphics.setColor(Color.BLUE);
 	    }
 	    graphics.fillRect(k + 5, getHeight() - barsArray[i] * 15,
 		    getWidth() / barsArray.length - 1, getHeight() * 2);
