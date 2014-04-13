@@ -3,14 +3,12 @@ package com.thejacer87.Algorithms;
 import com.thejacer87.SortingCanvas;
 
 public class Algorithms {
-    private int delay;
 
-    public Algorithms(int delay) {
-	this.delay = delay;
+    public Algorithms() {
     }
 
-    public synchronized void insertionSort(int[] array, SortingCanvas canvas)
-	    throws InterruptedException {
+    public synchronized void insertionSort(int[] array, int delay,
+	    SortingCanvas canvas) throws InterruptedException {
 	int pickup;
 	canvas.draw(-1, -1, -1);
 	for (int i = 1; i < array.length; i++) {
@@ -29,8 +27,8 @@ public class Algorithms {
 	canvas.draw(-1, -1, -1);
     }
 
-    public synchronized void selectionSort(int[] array, SortingCanvas canvas)
-	    throws InterruptedException {
+    public synchronized void selectionSort(int[] array, int delay,
+	    SortingCanvas canvas) throws InterruptedException {
 	canvas.draw(-1, -1, -1);
 	for (int i = 0; i < array.length - 1; i++) {
 	    int lowValueIndex = i;
@@ -45,17 +43,18 @@ public class Algorithms {
 	canvas.draw(-1, -1, -1);
     }
 
-    public synchronized void quickSort(int[] a, int start, int end,
+    public synchronized void quickSort(int[] a, int start, int end, int delay,
 	    SortingCanvas canvas) throws InterruptedException {
 	if (start < end) {
-	    int split = partition(a, start, end, canvas);
-	    quickSort(a, start, split - 1, canvas);
-	    quickSort(a, split + 1, end, canvas);
-	} // if
+	    int split = partition(a, start, end, delay, canvas);
+	    quickSort(a, start, split - 1, delay, canvas);
+	    quickSort(a, split + 1, end, delay, canvas);
+	}
+	canvas.draw(-1, -1, -1);
     }
 
-    public synchronized void bubbleSort(int[] array, SortingCanvas canvas)
-	    throws InterruptedException {
+    public synchronized void bubbleSort(int[] array, int delay,
+	    SortingCanvas canvas) throws InterruptedException {
 	canvas.draw(-1, -1, -1);
 	for (int i = 0; i < array.length - 1; i++) {
 	    for (int k = array.length - 2; k >= i; k--) {
@@ -68,8 +67,8 @@ public class Algorithms {
 	canvas.draw(-1, -1, -1);
     }
 
-    private int partition(int[] a, int start, int end, SortingCanvas canvas)
-	    throws InterruptedException {
+    private int partition(int[] a, int start, int end, int delay,
+	    SortingCanvas canvas) throws InterruptedException {
 	int right = end;
 	int pivot = a[start];
 	int left = start + 1;

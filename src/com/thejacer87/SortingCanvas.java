@@ -9,19 +9,25 @@ import java.awt.image.BufferStrategy;
 import com.thejacer87.Algorithms.Algorithms;
 
 public class SortingCanvas extends Canvas implements Runnable {
-
-    private int[] barsArray = new int[15];
+    /**
+     * Your guess is as good as mine...
+     */
+    private static final long serialVersionUID = 1L;
+    private final Color BAR_COLOR = Color.DARK_GRAY;
+    private final int bars = 26;
+    private SortingPanel sortingPanel;
     private Thread thread;
-    private Algorithms algorithms;
-    private int sortType;
     private Graphics graphics;
-    private Color barColor;
+    private int[] barsArray;
+    private int sortType;
+    private int delay;
 
-    public SortingCanvas(int width, int height, int delay) {
+    public SortingCanvas(int width, int height, int delay,
+	    SortingPanel sortingPanel) {
 	setPreferredSize(new Dimension(width, height));
 	setBackground(Color.YELLOW);
 	createBarArray();
-	algorithms = new Algorithms(delay);
+	this.sortingPanel = sortingPanel;
     }
 
     public void reset() {
@@ -30,6 +36,7 @@ public class SortingCanvas extends Canvas implements Runnable {
     }
 
     public void createBarArray() {
+	barsArray = new int[bars];
 	for (int i = 0; i < barsArray.length; i++) {
 	    barsArray[i] = (int) (Math.random() * 20) + 1;
 	}
@@ -44,7 +51,7 @@ public class SortingCanvas extends Canvas implements Runnable {
 	graphics = buffer.getDrawGraphics();
 	graphics.setColor(Color.YELLOW);
 	graphics.fillRect(0, 0, getWidth(), getHeight());
-	graphics.setColor(barColor);
+	graphics.setColor(BAR_COLOR);
 	for (int i = 0, k = 0; i < barsArray.length; i++, k += getWidth()
 		/ barsArray.length) {
 	    if (index1 == i) {
@@ -58,7 +65,7 @@ public class SortingCanvas extends Canvas implements Runnable {
 	    }
 	    graphics.fillRect(k + 5, getHeight() - barsArray[i] * 15,
 		    getWidth() / barsArray.length - 1, getHeight() * 2);
-	    graphics.setColor(barColor);
+	    graphics.setColor(BAR_COLOR);
 	}
 	graphics.dispose();
 	buffer.show();
@@ -67,7 +74,7 @@ public class SortingCanvas extends Canvas implements Runnable {
     @Override
     public void paint(Graphics g) {
 	super.paint(g);
-	barColor = g.getColor();
+	g.setColor(BAR_COLOR);
 	for (int i = 0, k = 0; i < barsArray.length; i++, k += getWidth()
 		/ barsArray.length) {
 	    g.fillRect(k + 5, getHeight() - barsArray[i] * 15, getWidth()
@@ -75,8 +82,9 @@ public class SortingCanvas extends Canvas implements Runnable {
 	}
     }
 
-    public void sort(int sortType) {
+    public void sort(int sortType, int delay) {
 	this.sortType = sortType;
+	this.delay = delay;
 	thread = new Thread(this);
 	thread.start();
     }
@@ -86,20 +94,22 @@ public class SortingCanvas extends Canvas implements Runnable {
 	try {
 	    switch (sortType) {
 	    case 0:
-		algorithms.bubbleSort(barsArray, this);
+		(new Algorithms()).bubbleSort(barsArray, delay, this);
 		break;
 	    case 1:
-		algorithms.quickSort(barsArray, 0, barsArray.length - 1, this);
+		(new Algorithms()).quickSort(barsArray, 0,
+			barsArray.length - 1, delay, this);
 		break;
 	    case 2:
-		algorithms.insertionSort(barsArray, this);
+		(new Algorithms()).insertionSort(barsArray, delay, this);
 		break;
 	    case 3:
-		algorithms.selectionSort(barsArray, this);
+		(new Algorithms()).selectionSort(barsArray, delay, this);
 		break;
 	    }
 	} catch (InterruptedException ie) {
 	    ie.printStackTrace();
 	}
+	sortingPanel.sortButton.setEnabled(true);
     }
 }

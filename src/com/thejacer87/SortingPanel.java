@@ -6,69 +6,94 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 
 public class SortingPanel extends JPanel implements ActionListener {
+    /**
+     * Don't know why it has to be serialized??
+     */
+    private static final long serialVersionUID = 1L;
     private JRadioButton bubbleSortButton;
     private JRadioButton quickSortButton;
     private JRadioButton insertionSortButton;
     private JRadioButton selectionSortButton;
-    private JButton sortButton;
+    private JRadioButton slowButton;
+    private JRadioButton mediumButton;
+    private JRadioButton fastButton;
+    protected JButton sortButton;
     private JButton resetButton;
     private SortingCanvas sortingCanvas;
-    private int delay;
 
     public SortingPanel() {
-	delay = 320;
 	// Sets layout and background color of main panel.
-	Color background = new Color(0xBBBBBB);
+	Color background = new Color(0xDBADF7);
 	setLayout(new BorderLayout());
 	this.setBackground(background);
-	JRadioButton radioButtonArray[] = { bubbleSortButton, quickSortButton,
-		insertionSortButton, selectionSortButton };
 
+	// Creates southPanel components
 	JPanel southPanel = new JPanel();
 	sortButton = new JButton(" Sort ");
 	resetButton = new JButton("Reset");
+	southPanel.setBorder(BorderFactory.createRaisedBevelBorder());
 	southPanel.setBackground(background);
 	southPanel.add(sortButton);
 	southPanel.add(resetButton);
 
+	// Creates centerPanel components
 	JPanel centerPanel = new JPanel();
-	sortingCanvas = new SortingCanvas(500, 300, delay);
+	sortingCanvas = new SortingCanvas(500, 310, 200, this);
+	centerPanel.setBorder(BorderFactory.createRaisedBevelBorder());
 	centerPanel.setBackground(background);
 	centerPanel.add(sortingCanvas);
 
-	JPanel westPanel = new JPanel();
-	ButtonGroup buttonGroup = new ButtonGroup();
+	// Creates westPanel components
+	JPanel westPanel = new JPanel(new GridLayout(2, 1));
+	JPanel sortTypePanel = new JPanel(new GridLayout(5, 1));
+	JPanel speedPanel = new JPanel(new GridLayout(4, 1));
+	JLabel typeLabel = new JLabel("SORT TYPES:", JLabel.CENTER);
+	JLabel speedLabel = new JLabel("SORTING SPEEDS:", JLabel.CENTER);
+	ButtonGroup sortButtonGroup = new ButtonGroup();
+	ButtonGroup speedButtonGroup = new ButtonGroup();
 	bubbleSortButton = new JRadioButton("Bubble Sort", true);
 	quickSortButton = new JRadioButton("Quick Sort");
 	insertionSortButton = new JRadioButton("Insertion Sort");
 	selectionSortButton = new JRadioButton("Selection Sort");
-	westPanel.setLayout(new GridLayout(4, 1));
-	// for (int i = 0; i < radioButtonArray.length; i++) {
-	// radioButtonArray[i].setBackground(background);
-	// buttonGroup.add(radioButtonArray[i]);
-	// westPanel.add(radioButtonArray[i]);
-	// }
-	buttonGroup.add(bubbleSortButton);
-	buttonGroup.add(quickSortButton);
-	buttonGroup.add(insertionSortButton);
-	buttonGroup.add(selectionSortButton);
+	slowButton = new JRadioButton("Slow");
+	mediumButton = new JRadioButton("Medium");
+	fastButton = new JRadioButton("Fast", true);
 
-	westPanel.add(bubbleSortButton);
-	westPanel.add(quickSortButton);
-	westPanel.add(insertionSortButton);
-	westPanel.add(selectionSortButton);
-	bubbleSortButton.setBackground(background);
-	quickSortButton.setBackground(background);
-	insertionSortButton.setBackground(background);
-	selectionSortButton.setBackground(background);
+	// Creates buttonGroups
+	sortButtonGroup.add(bubbleSortButton);
+	sortButtonGroup.add(quickSortButton);
+	sortButtonGroup.add(insertionSortButton);
+	sortButtonGroup.add(selectionSortButton);
+	speedButtonGroup.add(slowButton);
+	speedButtonGroup.add(mediumButton);
+	speedButtonGroup.add(fastButton);
 
+	// Adds buttons to appropriate panels
+	speedPanel.add(speedLabel);
+	speedPanel.add(slowButton);
+	speedPanel.add(mediumButton);
+	speedPanel.add(fastButton);
+	sortTypePanel.add(typeLabel);
+	sortTypePanel.add(bubbleSortButton);
+	sortTypePanel.add(quickSortButton);
+	sortTypePanel.add(insertionSortButton);
+	sortTypePanel.add(selectionSortButton);
+
+	// Adds components to westPanel
+	westPanel.setBorder(BorderFactory.createRaisedBevelBorder());
+	westPanel.add(sortTypePanel);
+	westPanel.add(speedPanel);
+
+	// Register listeners and add border layout panels to main panel
 	sortButton.addActionListener(this);
 	resetButton.addActionListener(this);
 	add(westPanel, BorderLayout.WEST);
@@ -76,6 +101,19 @@ public class SortingPanel extends JPanel implements ActionListener {
 	add(southPanel, BorderLayout.SOUTH);
     }
 
+    @Override
+    public void actionPerformed(ActionEvent e) {
+	if (e.getSource() == sortButton) {
+	    sortingCanvas.sort(getSortType(), getDelaySpeed());
+	    sortButton.setEnabled(false);
+	}
+	if (e.getSource() == resetButton) {
+	    sortingCanvas.reset();
+	    sortButton.setEnabled(true);
+	}
+    }
+
+    // Main method
     public static void main(String[] args) {
 	JFrame myApp = new JFrame("Sorting GUI");
 	SortingPanel myPanel = new SortingPanel();
@@ -84,21 +122,24 @@ public class SortingPanel extends JPanel implements ActionListener {
 	myApp.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	myApp.setSize(635, 385);
 	myApp.setVisible(true);
+	myApp.setResizable(false);
 	myApp.setLocationRelativeTo(null);
+    } // end Main
 
+    private int getDelaySpeed() {
+	if (slowButton.isSelected()) {
+	    return 300;
+	}
+	if (mediumButton.isSelected()) {
+	    return 150;
+	}
+	if (fastButton.isSelected()) {
+	    return 80;
+	}
+	return -1;
     }
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-	if (e.getSource() == sortButton) {
-	    sortingCanvas.sort(getButtonValue());
-	}
-	if (e.getSource() == resetButton) {
-	    sortingCanvas.reset();
-	}
-    }
-
-    private int getButtonValue() {
+    private int getSortType() {
 	if (bubbleSortButton.isSelected())
 	    return 0;
 	if (quickSortButton.isSelected())
