@@ -17,12 +17,11 @@ public class Algorithms {
 	    while (k > 0 && pickup < array[k - 1]) {
 		array[k] = array[k - 1];
 		k--;
+		canvas.draw(i, k, -1);
 		Thread.sleep(delay);
-		canvas.draw(-1, k, i);
 	    }
-	    Thread.sleep(delay);
-	    // canvas.draw(k, -1, i + 1);
 	    array[k] = pickup;
+	    canvas.draw(i, k, -1);
 	}
 	canvas.draw(-1, -1, -1);
     }
@@ -45,6 +44,7 @@ public class Algorithms {
 
     public synchronized void quickSort(int[] a, int start, int end, int delay,
 	    SortingCanvas canvas) throws InterruptedException {
+	canvas.draw(-1, -1, -1);
 	if (start < end) {
 	    int split = partition(a, start, end, delay, canvas);
 	    quickSort(a, start, split - 1, delay, canvas);
@@ -73,22 +73,25 @@ public class Algorithms {
 	int pivot = a[start];
 	int left = start + 1;
 	while (left <= right) {
-	    while (left <= end && a[left] <= pivot)
+	    while (left <= end && a[left] <= pivot) {
 		left++;
-	    Thread.sleep(delay);
-	    canvas.draw(-1, -1, pivot);
-	    while (right > start && a[right] > pivot)
+		canvas.draw(left, right, pivot);
+		Thread.sleep(delay);
+	    }
+	    while (right > start && a[right] > pivot) {
 		right--;
-	    Thread.sleep(delay);
-	    canvas.draw(-1, -1, pivot);
-	    if (left < right)
+		canvas.draw(left, right, pivot);
+		Thread.sleep(delay);
+	    }
+	    if (left < right) {
 		swap(a, left, right);
-	    Thread.sleep(delay);
-	    canvas.draw(left, right, pivot);
+		canvas.draw(left, right, pivot);
+		Thread.sleep(delay);
+	    }
 	}
 	swap(a, right, start);
-	Thread.sleep(delay);
 	canvas.draw(left, right, pivot);
+	Thread.sleep(delay);
 	return right;
     }
 

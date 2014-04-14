@@ -64,7 +64,7 @@ public class SortingCanvas extends Canvas implements Runnable {
 		graphics.setColor(Color.BLUE);
 	    }
 	    graphics.fillRect(k + 5, getHeight() - barsArray[i] * 15,
-		    getWidth() / barsArray.length - 1, getHeight() * 2);
+		    getWidth() / barsArray.length - 1, getHeight());
 	    graphics.setColor(BAR_COLOR);
 	}
 	graphics.dispose();
@@ -78,7 +78,7 @@ public class SortingCanvas extends Canvas implements Runnable {
 	for (int i = 0, k = 0; i < barsArray.length; i++, k += getWidth()
 		/ barsArray.length) {
 	    g.fillRect(k + 5, getHeight() - barsArray[i] * 15, getWidth()
-		    / barsArray.length - 1, getHeight() * 2);
+		    / barsArray.length - 1, getHeight());
 	}
     }
 
